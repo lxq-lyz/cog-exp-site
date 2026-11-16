@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>大学生认知任务实验 · 入口</title>
+<link rel="stylesheet" href="./style.css">
+</head>
+<body>
+<div class="wrap">
+
+  <div class="card">
+    <h1>大学生认知任务线上实验</h1>
+    <p class="sub">全程约 25–30 分钟 · 需要电脑和键盘 · 请一次性做完</p>
+
+    <p>本实验包含三个连续的认知任务：<strong>颜色命名任务</strong>（看到词语后按对应颜色键）、<strong>词语记忆与再认任务</strong>（先记一组词，再做新旧判断）、<strong>类比推理任务</strong>（完成"A 之于 B，相当于 C 之于 ？"的类推题）。</p>
+
+    <h2>参加前请确认</h2>
+    <ul>
+      <li>使用<strong>电脑</strong>参加，不要用手机或平板（任务依赖键盘反应，手机记录的数据不可用）</li>
+      <li>使用 Chrome 或 Edge 浏览器，关闭其他占用资源的程序</li>
+      <li>全程约 25–30 分钟，中途<strong>不要刷新页面或切换窗口</strong>，否则当前部分的数据会作废</li>
+      <li>实验开始后会进入全屏，请按提示操作；如遇全屏失败，请按 F11 手动进入全屏</li>
+      <li>请在安静环境中一次做完，期间不要离开座位</li>
+    </ul>
+
+    <!-- ====== 知情同意：内容由主试自行撰写，把下面这段注释整体替换掉即可 ======
+    <h2>知情同意</h2>
+    <p>【研究题目】</p>
+    <p>【研究者 / 指导教师 / 联系方式】</p>
+    <p>【数据用途、匿名与保存说明】</p>
+    <p>【自愿参加与随时退出的说明、伦理审批号】</p>
+    ====== 知情同意占位结束 ====== -->
+
+    <div class="field">
+      <label for="pid">被试编号（可留空，系统会自动生成）</label>
+      <input type="text" id="pid" placeholder="例如 P20261110001，或直接留空">
+      <p class="small" style="margin-top:6px">如果主试已经给你一个编号，请在这里填写，便于与问卷数据对应。</p>
+    </div>
+
+    <div class="check">
+      <input type="checkbox" id="agree">
+      <label for="agree" style="font-weight:400;margin:0">我已阅读并理解上述说明和知情同意内容，自愿参加本实验，并确认将使用电脑完成全部任务。</label>
+    </div>
+
+    <button class="btn" id="start" disabled>开始实验</button>
+    <div class="hint" id="hint"></div>
+  </div>
+
+  <footer>建议在安静、网络稳定的环境中一次性完成 · 数据仅用于学术研究</footer>
+</div>
+
+<script src="./bridge.js"></script>
+<script>
+(function () {
+  var pidEl = document.getElementById('pid');
+  var agreeEl = document.getElementById('agree');
+  var btn = document.getElementById('start');
+  var hint = document.getElementById('hint');
+
+  function refresh() {
+    btn.disabled = !agreeEl.checked;
+  }
+  agreeEl.addEventListener('change', refresh);
+  refresh();
+
+  btn.addEventListener('click', function () {
+    if (window.__isMobile()) {
+      hint.textContent = '检测到你在使用手机或平板，本实验必须使用电脑完成，请换用电脑打开本链接。';
+      return;
+    }
+    var pid = (pidEl.value || '').trim();
+    if (!pid) {
+      pid = window.__genPid();
+      pidEl.value = pid;
+    }
+    if (!/^[A-Za-z0-9_\-]{3,32}$/.test(pid)) {
+      hint.textContent = '编号只能使用字母、数字、下划线或短横线（3–32 位）。';
+      return;
+    }
+    hint.textContent = '';
+    window.__startedAt();
+    var url = 'exp/index.html?participant=' + encodeURIComponent(pid) + '&session=001';
+    btn.disabled = true;
+    btn.textContent = '正在进入实验……';
+    location.href = url;
+  });
+})();
+</script>
+</body>
+</html>

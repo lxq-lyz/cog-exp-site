@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>实验完成</title>
+<link rel="stylesheet" href="./style.css">
+</head>
+<body>
+<div class="wrap">
+  <div class="card">
+    <h1>全部完成，感谢你的参与</h1>
+    <p class="sub">你的数据已提交。下面是你的完成码。</p>
+
+    <p style="margin:22px 0 8px">完成码</p>
+    <p><span class="code" id="code">—</span></p>
+    <p class="small">请把完成码复制或截图保存，按招募要求提交（若通过课程平台或问卷平台招募，请填写到完成码一栏）。</p>
+
+    <h2>接下来</h2>
+    <ul>
+      <li>请不要把实验内容告诉还没参加的同学，这会破坏实验设计</li>
+      <li>如需要参与凭证，请把完成码发给主试：×××（微信/邮箱：×××）</li>
+    </ul>
+
+    <div class="notice" id="pending" style="display:none;margin-top:18px">
+      检测到有数据未能自动上传。系统已为你下载了一个 CSV 文件，请把它发回给主试（文件名以"实验"开头），否则数据可能丢失。
+    </div>
+  </div>
+  <footer>数据仅用于学术研究 · 匿名编号</footer>
+</div>
+
+<script src="./bridge.js"></script>
+<script>
+(function () {
+  var q = new URLSearchParams(location.search);
+  var pid = q.get('participant') || '未知';
+  document.getElementById('code').textContent = pid;
+
+  try {
+    var pending = localStorage.getItem('exp_pending_csv');
+    if (pending) {
+      document.getElementById('pending').style.display = 'block';
+    }
+  } catch (e) {}
+})();
+</script>
+</body>
+</html>
