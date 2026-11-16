@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+<title>认知任务实验</title>
+<link rel="stylesheet" href="../lib/jquery-ui.min.css">
+<link rel="stylesheet" href="./lib/psychojs-2024.2.4.css">
+<style>html,body{margin:0;background:#000;overflow:hidden}</style>
+</head>
+<body>
+<div id="root"></div>
+
+<script src="../lib/jquery.min.js"></script>
+<script src="../lib/jquery-ui.min.js"></script>
+<script src="../lib/preloadjs.min.js"></script>
+
+<!-- 数据回收桥：必须在本实验脚本之前加载 -->
+<script src="../bridge.js"></script>
+<script>
+  window.EXP_NEXT = "../finish.html";
+  if (window.__startedAt) { window.__startedAt(); }
+  // 没有被试编号就直接退回入口页，避免产生无法归属的 ANON 数据
+  (function () {
+    var __p = (new URLSearchParams(location.search).get('participant') || '').trim();
+    if (!__p) { location.replace('../index.html?needPid=1'); }
+  })();
+</script>
+
+<script src="./exp.js" type="module"></script>
+
+<script src="./lib/psychojs-2024.2.4.iife.js" nomodule></script>
+<script src="./exp-legacy-browsers.js" nomodule></script>
+</body>
+</html>

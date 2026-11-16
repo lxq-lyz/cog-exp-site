@@ -3,14 +3,14 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>大学生认知任务实验 · 入口</title>
+<title>认知任务线上实验 · 入口</title>
 <link rel="stylesheet" href="./style.css">
 </head>
 <body>
 <div class="wrap">
 
   <div class="card">
-    <h1>大学生认知任务线上实验</h1>
+    <h1>认知任务线上实验</h1>
     <p class="sub">全程约 25–30 分钟 · 需要电脑和键盘 · 请一次性做完</p>
 
     <p>本实验包含三个连续的认知任务：<strong>颜色命名任务</strong>（看到词语后按对应颜色键）、<strong>词语记忆与再认任务</strong>（先记一组词，再做新旧判断）、<strong>类比推理任务</strong>（完成"A 之于 B，相当于 C 之于 ？"的类推题）。</p>
@@ -33,9 +33,9 @@
     ====== 知情同意占位结束 ====== -->
 
     <div class="field">
-      <label for="pid">被试编号（可留空，系统会自动生成）</label>
-      <input type="text" id="pid" placeholder="例如 P20261110001，或直接留空">
-      <p class="small" style="margin-top:6px">如果主试已经给你一个编号，请在这里填写，便于与问卷数据对应。</p>
+      <label for="pid">被试编号（<strong>必填</strong>）</label>
+      <input type="text" id="pid" placeholder="例如 S001（主试发给你的编号）" required>
+      <p class="small" style="margin-top:6px">编号用于区分不同被试，<strong>必须填写</strong>。请在招募通知、群公告或主试私聊里找到你的编号；没有编号请先联系主试，不要自行编造。</p>
     </div>
 
     <div class="check">
@@ -64,6 +64,16 @@
   agreeEl.addEventListener('change', refresh);
   refresh();
 
+  // 从 exp 外壳被退回时，把编号回填进来，并提示原因
+  (function () {
+    var qs = new URLSearchParams(location.search);
+    var pidFromUrl = (qs.get('pid') || '').trim();
+    if (pidFromUrl) { pidEl.value = pidFromUrl; }
+    if (qs.get('needPid') === '1') {
+      hint.textContent = '请先填写你的被试编号，否则无法区分数据属于哪位被试。';
+    }
+  })();
+
   btn.addEventListener('click', function () {
     if (window.__isMobile()) {
       hint.textContent = '检测到你在使用手机或平板，本实验必须使用电脑完成，请换用电脑打开本链接。';
@@ -71,11 +81,13 @@
     }
     var pid = (pidEl.value || '').trim();
     if (!pid) {
-      pid = window.__genPid();
-      pidEl.value = pid;
+      hint.textContent = '请填写你的被试编号（由主试提供），否则无法区分数据属于谁。';
+      pidEl.focus();
+      return;
     }
-    if (!/^[A-Za-z0-9_\-]{3,32}$/.test(pid)) {
-      hint.textContent = '编号只能使用字母、数字、下划线或短横线（3–32 位）。';
+    if (!/^[A-Za-z0-9_\-]{2,32}$/.test(pid)) {
+      hint.textContent = '编号只能使用字母、数字、下划线或短横线（2–32 位），请照主试给的编号原样填写。';
+      pidEl.focus();
       return;
     }
     hint.textContent = '';
